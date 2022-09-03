@@ -55,6 +55,11 @@ module Discordrb::Events
       )
     end
 
+    # (see Interaction#show_modal)
+    def show_modal(title:, custom_id:, components: nil, &block)
+      @interaction.show_modal(title: title, custom_id: custom_id, components: components, &block)
+    end
+
     # (see Interaction#edit_response)
     def edit_response(content: nil, embeds: nil, allowed_mentions: nil, components: nil, &block)
       @interaction.edit_response(content: content, embeds: embeds, allowed_mentions: allowed_mentions, components: components, &block)
@@ -83,6 +88,11 @@ module Discordrb::Events
     # (see Interaction#defer_update)
     def defer_update
       @interaction.defer_update
+    end
+
+    # (see Interaction#get_component)
+    def get_component(custom_id)
+      @interaction.get_component(custom_id)
     end
   end
 
@@ -321,7 +331,7 @@ module Discordrb::Events
     def initialize(data, bot)
       super
 
-      @message = Discordrb::Interactions::Message.new(data['message'], bot, @interaction)
+      @message = Discordrb::Interactions::Message.new(data['message'], bot, @interaction) if data['message']
       @custom_id = data['data']['custom_id']
     end
   end
@@ -359,6 +369,19 @@ module Discordrb::Events
   class ButtonEvent < ComponentEvent
   end
 
+  # An event for when a user submits a modal.
+  class ModalSubmitEvent < ComponentEvent
+    # @return [Array<TextInputComponent>]
+    attr_reader :components
+
+    # Get the value of an input passed to the modal.
+    # @param custom_id [String] The custom ID of the component to look for.
+    # @return [String, nil]
+    def value(custom_id)
+      get_component(custom_id)&.value
+    end
+  end
+
   # Event handler for a Button interaction event.
   class ButtonEventHandler < ComponentEventHandler
   end
@@ -379,4 +402,8 @@ module Discordrb::Events
   # Event handler for a select menu component.
   class SelectMenuEventHandler < ComponentEventHandler
   end
+
+   # Event handler for a modal submission.
+   class ModalSubmitEventHandler < ComponentEventHandler
+   end
 end

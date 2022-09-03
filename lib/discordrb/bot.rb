@@ -1566,6 +1566,9 @@ module Discordrb
             raise_event(event)
           end
         end
+      when Interaction::TYPES[:modal_submit]
+        event = ModalSubmitEvent.new(data, self)
+        raise_event(event)
       when :WEBHOOKS_UPDATE
         event = WebhookUpdateEvent.new(data, self)
         raise_event(event)

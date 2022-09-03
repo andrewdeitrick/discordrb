@@ -576,6 +576,19 @@ module Discordrb
       register_event(SelectMenuEvent, attributes, block)
     end
 
+    # This **event** is raised whenever a modal is submitted.
+    # @param attributes [Hash] The event's attributes.
+    # @option attributes [String, Regexp] :custom_id A custom_id to match against.
+    # @option attributes [String, Integer, Message] :message The message to filter for.
+    # @option attributes [String, Integer, Server, nil] :server The server where this event was created. `nil` for DM channels.
+    # @option attributes [String, Integer, Channel] :channel The channel where this event was created.
+    # @option attributes [String, Integer, User] :user The user that triggered this event.    # @yield The block is executed when the event is raised.
+    # @yieldparam event [ModalSubmitEvent] The event that was raised.
+    # @return [ModalSubmitEventHandler] The event handler that was registered.
+    def modal_submit(attributes = {}, &block)
+      register_event(ModalSubmitEvent, attributes, block)
+    end
+
     # This **event** is raised for every dispatch received over the gateway, whether supported by discordrb or not.
     # @param attributes [Hash] The event's attributes.
     # @option attributes [String, Symbol, Regexp] :type Matches the event type of the dispatch.
